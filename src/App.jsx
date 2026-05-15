@@ -1,8 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
 
 function App() {
-  const [tasks, setTasks] = useState([]);
+  const [tasks, setTasks] = useState(() => {
+  const savedTasks = localStorage.getItem("studyTasks");
+  return savedTasks ? JSON.parse(savedTasks) : [];
+});
   const [formData, setFormData] = useState({
     course: "",
     taskName: "",
@@ -10,11 +13,28 @@ function App() {
     difficulty: "Medium",
     estimatedHours: "",
   });
+  useEffect(() => {
+  localStorage.setItem("studyTasks", JSON.stringify(tasks));
+}, [tasks]);
   const sortedTasks = [...tasks].sort(
   (a, b) => b.priorityScore - a.priorityScore
 );
 
 const topTask = sortedTasks.length > 0 ? sortedTasks[0] : null;
+const totalTasks = tasks.length;
+
+const totalEstimatedHours = tasks.reduce(
+  (total, task) => total + task.estimatedHours,
+  0
+);
+
+const averagePriority =
+  tasks.length > 0
+    ? Math.round(
+        tasks.reduce((total, task) => total + task.priorityScore, 0) /
+          tasks.length
+      )
+    : 0;
 
   function calculatePriorityScore(dueDate, difficulty, estimatedHours) {
     const today = new Date();
@@ -59,6 +79,10 @@ const topTask = sortedTasks.length > 0 ? sortedTasks[0] : null;
     });
   }
 
+  function deleteTask(taskId) {
+  const updatedTasks = tasks.filter((task) => task.id !== taskId);
+  setTasks(updatedTasks);
+}
   function handleSubmit(event) {
     event.preventDefault();
 
@@ -95,7 +119,27 @@ const topTask = sortedTasks.length > 0 ? sortedTasks[0] : null;
           Organize courses, deadlines, and weak topics into a smarter study plan.
         </p>
       </section>
+      <section className="dashboard">
+        <div className="dashboard-card">
+        <h3>Total Tasks</h3>
+        <p>{totalTasks}</p>
+        </div>
 
+            <div className="dashboard-card">
+              <h3>Total Study Hours</h3>
+              <p>{totalEstimatedHours}</p>
+            </div>
+
+            <div className="dashboard-card">
+              <h3>Average Priority</h3>
+              <p>{averagePriority}</p>
+            </div>
+
+                  <div className="dashboard-card">
+          <h3>Top Task</h3>
+          <p>{topTask ? topTask.taskName : "None"}</p>
+        </div>
+      </section>
       <section className="card">
         <h2>Add Study Task</h2>
 
@@ -197,6 +241,9 @@ const topTask = sortedTasks.length > 0 ? sortedTasks[0] : null;
                   <p>
                     <strong>Priority Score:</strong> {task.priorityScore}
                   </p>
+                  <button className="delete-button" onClick={() => deleteTask(task.id)}>
+                  Delete Task
+                  </button>
                 </article>
               ))}
           </div>

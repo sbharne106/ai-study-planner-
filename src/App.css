@@ -96,3 +96,66 @@ body {
 .task-item h3 {
   margin-top: 0;
 }
+
+.recommendation-card {
+  border: 2px solid #2563eb;
+}
+
+.recommendation-text {
+  font-size: 18px;
+}
+
+.delete-button {
+  margin-top: 12px;
+  padding: 10px 14px;
+  background: #dc2626;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.delete-button:hover {
+  background: #b91c1c;
+}
+
+.dashboard {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.dashboard-card {
+  background: white;
+  padding: 18px;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+  text-align: center;
+}
+
+.dashboard-card h3 {
+  margin: 0 0 8px;
+  font-size: 15px;
+  color: #4b5563;
+}
+
+.dashboard-card p {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 800;
+  color: #1f2937;
+}
+
+@media (max-width: 800px) {
+  .dashboard {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 500px) {
+  .dashboard {
+    grid-template-columns: 1fr;
+  }
+}
