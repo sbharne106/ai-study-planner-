@@ -159,3 +159,18 @@ body {
     grid-template-columns: 1fr;
   }
 }
+.status-label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 12px;
+  font-weight: 700;
+}
+
+.status-select {
+  max-width: 220px;
+  padding: 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  font-size: 15px;
+}

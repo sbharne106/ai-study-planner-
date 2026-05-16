@@ -22,6 +22,9 @@ function App() {
 
 const topTask = sortedTasks.length > 0 ? sortedTasks[0] : null;
 const totalTasks = tasks.length;
+const completedTasks = tasks.filter(
+  (task) => task.status === "Completed"
+).length;
 
 const totalEstimatedHours = tasks.reduce(
   (total, task) => total + task.estimatedHours,
@@ -83,6 +86,20 @@ const averagePriority =
   const updatedTasks = tasks.filter((task) => task.id !== taskId);
   setTasks(updatedTasks);
 }
+function updateTaskStatus(taskId, newStatus) {
+  const updatedTasks = tasks.map((task) => {
+    if (task.id === taskId) {
+      return {
+        ...task,
+        status: newStatus,
+      };
+    }
+
+    return task;
+  });
+
+  setTasks(updatedTasks);
+}
   function handleSubmit(event) {
     event.preventDefault();
 
@@ -93,6 +110,7 @@ const averagePriority =
       dueDate: formData.dueDate,
       difficulty: formData.difficulty,
       estimatedHours: Number(formData.estimatedHours),
+      status: "Not Started",
       priorityScore: calculatePriorityScore(
         formData.dueDate,
         formData.difficulty,
@@ -130,12 +148,14 @@ const averagePriority =
               <p>{totalEstimatedHours}</p>
             </div>
 
-            <div className="dashboard-card">
-              <h3>Average Priority</h3>
-              <p>{averagePriority}</p>
-            </div>
+           <div className="dashboard-card">
+            <h3>Completed Tasks</h3>
+            <p>
+            {completedTasks}/{totalTasks}
+            </p>
+          </div>
 
-                  <div className="dashboard-card">
+          <div className="dashboard-card">
           <h3>Top Task</h3>
           <p>{topTask ? topTask.taskName : "None"}</p>
         </div>
@@ -241,6 +261,18 @@ const averagePriority =
                   <p>
                     <strong>Priority Score:</strong> {task.priorityScore}
                   </p>
+                  <label className="status-label">
+                    Status
+                    <select
+                      value={task.status}
+                      onChange={(event) => updateTaskStatus(task.id, event.target.value)}
+                      className="status-select"
+                    >
+                      <option>Not Started</option>
+                      <option>In Progress</option>
+                      <option>Completed</option>
+                    </select>
+                  </label>
                   <button className="delete-button" onClick={() => deleteTask(task.id)}>
                   Delete Task
                   </button>
